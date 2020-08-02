@@ -7,7 +7,7 @@ router.route('/').get((req, res) => {
 
 router.route('/add').post((req, res) => {
     const name = req.body.name
-    const agency = req.body.agency
+    const bestKnownFor = req.body.bestKnownFor
     const union = req.body.union
     const daytime = req.body.daytime
     const ageMin = req.body.ageMin
@@ -21,9 +21,8 @@ router.route('/add').post((req, res) => {
     const phone = req.body.phone
     const email = req.body.email
     const imageUrl = req.body.imageUrl
-    const resumeUrl = req.body.resumeUrl
 
-    const newModel = new Data({name, agency, union, daytime, ageMin, ageMax, heightFt, heightIn, hairColor, shoe, size, skills, phone, email, imageUrl, resumeUrl})
+    const newModel = new Data({name, bestKnownFor, union, daytime, ageMin, ageMax, heightFt, heightIn, hairColor, shoe, size, skills, phone, email, imageUrl})
 
     newModel.save().then(() => res.json(newModel)).catch(err => res.status(400).json(err))
 })

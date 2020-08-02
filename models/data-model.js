@@ -7,7 +7,7 @@ const DataSchema = new mongoose.Schema({
         unique: true,
         trim: true
     }, 
-    agency: {
+    bestKnownFor: {
         type: String
     }, 
     union: {
@@ -47,9 +47,6 @@ const DataSchema = new mongoose.Schema({
         type: String
     }, 
     imageUrl: {
-        type: String
-    }, 
-    resumeUrl: {
         type: String
     }
 });

@@ -32,7 +32,6 @@ import {
   Checkbox,
   CircularProgress,
 } from "@material-ui/core";
-import { set } from "mongoose";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -114,7 +113,7 @@ const PageContent = () => {
 
   const attributes = [
     "name",
-    "agency",
+    "bestKnownFor",
     "union",
     "daytime",
     "shoe",
@@ -130,7 +129,7 @@ const PageContent = () => {
   const [modal, setModal] = useState(false);
   const [model, setModel] = useState({
     name: "",
-    agency: "",
+    bestKnownFor: "",
     union: "no",
     daytime: "",
     ageMin: "",
@@ -143,14 +142,13 @@ const PageContent = () => {
     skills: [],
     phone: "",
     email: "",
-    imageUrl: "",
-    resumeUrl: "",
+    imageUrl: ""
   });
   const [image, setImage] = useState();
   const [resume, setResume] = useState();
   const [currentModel, setCurrentModel] = useState({
     name: "",
-    agency: "",
+    bestKnownFor: "",
     union: "no",
     daytime: "",
     ageMin: "",
@@ -163,8 +161,7 @@ const PageContent = () => {
     skills: [],
     phone: "",
     email: "",
-    imageUrl: "",
-    resumeUrl: "",
+    imageUrl: ""
   });
   const [currentModal, setCurrentModal] = useState(false);
   const [search, setSearch] = useState("");
@@ -219,8 +216,7 @@ const PageContent = () => {
     setFormLoading(true);
     const payload = {
       ...model,
-      imageUrl: await handleImageUpload(),
-      resumeUrl: await handleResumeUpload(),
+      imageUrl: await handleImageUpload()
     };
     console.log(payload);
     axios
@@ -231,7 +227,7 @@ const PageContent = () => {
         setModal(false);
         setModel({
           name: "",
-          agency: "",
+          bestKnownFor: "",
           union: false,
           daytime: "",
           ageMin: "",
@@ -244,8 +240,7 @@ const PageContent = () => {
           skills: [],
           phone: "",
           email: "",
-          imageUrl: "",
-          resumeUrl: "",
+          imageUrl: ""
         });
         setFormLoading(false)
       })
@@ -274,22 +269,6 @@ const PageContent = () => {
       data
     );
     return res.data.url;
-  };
-
-  const handleResumeUpload = async () => {
-    if (!resume) {
-      return "";
-    } else {
-      const data = new FormData();
-      data.append("file", resume);
-      data.append("upload_preset", "quad-resumes");
-      data.append("cloud_name", "dayj7wgeb");
-      const res = await axios.post(
-        "https://api.cloudinary.com/v1_1/dayj7wgeb/image/upload",
-        data
-      );
-      return res.data.url;
-    }
   };
 
   const handleModalOpen = (id) => {
@@ -422,7 +401,7 @@ const PageContent = () => {
                 handleDropdownClose();
               }}
             >
-              {att[0].toUpperCase() + att.slice(1)}
+              {att !== "bestKnownFor" ? att[0].toUpperCase() + att.slice(1) : "Best Known For"}
             </MenuItem>
           ))}
         </Menu>
@@ -433,7 +412,7 @@ const PageContent = () => {
                 {cols.map((col) => (
                   <TableCell key={col}>
                     <div className="d-flex align-items-center justify-content-between">
-                      {col[0].toUpperCase() + col.slice(1)}
+                      {col !== "bestKnownFor" ? col[0].toUpperCase() + col.slice(1) : "Best Known For"}
                       <FaMinusCircle
                         style={{ cursor: "pointer", color: "red" }}
                         onClick={() => {
@@ -499,9 +478,9 @@ const PageContent = () => {
                   </Grid>
                   <Grid item xs={4}>
                     <TextField
-                      value={model.agency}
-                      label="Agency"
-                      name="agency"
+                      value={model.bestKnownFor}
+                      label="Best Known For"
+                      name="bestKnownFor"
                       type="text"
                       onChange={handleChange}
                     />
@@ -666,6 +645,7 @@ const PageContent = () => {
                       <input
                         onChange={(e) => {
                           setImage(e.target.files[0]);
+                          console.log(image)
                         }}
                         id="image-upload"
                         type="file"
@@ -681,20 +661,9 @@ const PageContent = () => {
                     </div>
                   </Grid>
                   <Grid item xs={6}>
-                    <input
-                      type="file"
-                      name="resume"
-                      className={classes.input}
-                      onChange={(e) => {
-                        setResume(e.target.files[0]);
-                      }}
-                      id="resume-upload"
-                    />
-                    <label htmlFor="resume-upload">
-                      <Button variant="contained" component="span">
-                        Upload Resume
-                      </Button>
-                    </label>
+                    <div>
+                      {image ? image.name : ''}
+                    </div>
                   </Grid>
                 </Grid>
                 <Button variant="outlined" type="submit">
@@ -737,13 +706,13 @@ const PageContent = () => {
                     <span className={classes.bold}>Age Range: </span>
                     {currentModel.ageMin}-{currentModel.ageMax}
                   </Typography> : ''}
-                  {currentModel.agency.length ? <Typography variant="body1" className={classes.typography}>
-                    <span className={classes.bold}>Agency: </span>
-                    {currentModel.agency}
+                  {currentModel.bestKnownFor.length ? <Typography variant="body1" className={classes.typography}>
+                    <span className={classes.bold}>Best Known For: </span>
+                    {currentModel.bestKnownFor}
                   </Typography> : ''}
                   {currentModel.union.length ? <Typography variant="body1" className={classes.typography}>
                     <span className={classes.bold}>Union: </span>
-                    {currentModel.union}
+                    {currentModel.union[0].toUpperCase()+currentModel.union.slice(1)}
                   </Typography> : ''}
                   {currentModel.daytime.lengtht ? <Typography variant="body1" className={classes.typography}>
                     <span className={classes.bold}>Daytime Avail: </span>
@@ -765,13 +734,6 @@ const PageContent = () => {
                       {currentModel.phone}
                     </a>
                   </Typography> : ''}
-                  {currentModel.resumeUrl.length ? (
-                    <Button href={currentModel.resumeUrl} variant="outlined">
-                      Link to Resume
-                    </Button>
-                  ) : (
-                    ""
-                  )}
                 </Grid>
               </Grid>
             </Paper>
