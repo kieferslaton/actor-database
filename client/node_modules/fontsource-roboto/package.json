@@ -1,0 +1,18 @@
+{
+  "name": "fontsource-roboto",
+  "version": "2.2.6",
+  "description": "Roboto font in NPM glory.",
+  "main": "index.css",
+  "keywords": [
+    "fontsource",
+    "font",
+    "font family",
+    "google fonts",
+    "Roboto",
+    "roboto"
+  ],
+  "author": "Lotus <declininglotus@gmail.com>",
+  "license": "MIT",
+  "repository": "https://github.com/DecliningLotus/fontsource/tree/master/packages/roboto",
+  "gitHead": "f3db83684bdc9431fed1743b82e7b400f840fcf3"
+}
