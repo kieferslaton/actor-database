@@ -309,20 +309,20 @@ const PageContent = () => {
         anchor="left"
       >
         <Typography className={classes.title} variant="h5">
-          Model Database
+          Actor Database
         </Typography>
         <Button
           className={classes.drawerListItem}
           variant="outlined"
           onClick={() => setModal(true)}
         >
-          Add Model
+          Add Actor
           <FaPlus className="ml-2" />
         </Button>
         <form className={classes.filterWrapper}>
           <TextField
             className={classes.drawerListItem}
-            label="Model Search"
+            label="Actor Search"
             onChange={(e) => setSearch(e.target.value)}
           />
           <div className={classes.drawerListItem}>
@@ -462,7 +462,7 @@ const PageContent = () => {
         <Modal open={modal} onClose={() => setModal(false)}>
           <div className={classes.modal}>
             <Paper className={classes.paper}>
-              <Typography variant="h6">Add Model</Typography>
+              <Typography variant="h6">Add Actor</Typography>
               <form onSubmit={handleModelAdd}>
                 <Grid className={classes.formGrid} container spacing={3}>
                   <Grid item xs={4}>
@@ -667,7 +667,7 @@ const PageContent = () => {
                   </Grid>
                 </Grid>
                 <Button variant="outlined" type="submit">
-                  {formLoading ? <CircularProgress size={20} /> : 'Add Model'}
+                  {formLoading ? <CircularProgress size={20} /> : 'Add Actor'}
                 </Button>
               </form>
             </Paper>

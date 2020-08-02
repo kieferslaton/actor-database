@@ -8,5 +8,9 @@
     "mongoose": "^5.9.26",
     "nodemon": "^2.0.4",
     "path": "^0.12.7"
+  }, 
+  "scripts": {
+    "start": "node index.js",
+    "heroku-postbuild": "cd client && npm i --only=dev && npm i && npm run build"
   }
 }
