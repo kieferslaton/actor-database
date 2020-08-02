@@ -10,7 +10,7 @@
     "path": "^0.12.7"
   }, 
   "scripts": {
-    "start": "node index.js",
+    "start": "node server.js",
     "heroku-postbuild": "cd client && npm i --only=dev && npm i && npm run build"
   }
 }
