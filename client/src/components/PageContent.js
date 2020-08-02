@@ -106,6 +106,12 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 10,
     marginBottom: 10,
   },
+  tr: {
+    '&:hover': {
+      background: "#f9f9f9",
+      cursor: "pointer"
+    }
+  }
 }));
 
 const PageContent = () => {
@@ -242,6 +248,7 @@ const PageContent = () => {
           email: "",
           imageUrl: ""
         });
+        setImage('')
         setFormLoading(false)
       })
       .catch((err) => console.log(err.response.data));
@@ -430,7 +437,7 @@ const PageContent = () => {
                     <TableRow
                       key={model._id}
                       onClick={() => handleModalOpen(model._id)}
-                      className="border-none"
+                      className={classes.tr}
                     >
                       {cols.map((col) => {
                         if (col === "age") {
