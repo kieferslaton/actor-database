@@ -50,6 +50,15 @@ const useStyles = makeStyles((theme) => ({
   },
   toolbar: theme.mixins.toolbar, 
   appbar: {
+    [theme.breakpoints.up('sm')]: {
+      width: `calc(100% - 250px)`, 
+      marginLeft: 250
+    }
+  },
+  menuButton: {
+    [theme.breakpoints.up('sm')]: {
+      display: 'none'
+    }
   },
   drawer: {
     width: 250,
@@ -69,6 +78,9 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 65,
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
+    [theme.breakpoints.down('sm')]: {
+      marginTop: 55
+    }
   },
   dropdownButton: {
     position: "fixed",
@@ -114,6 +126,9 @@ const useStyles = makeStyles((theme) => ({
   },
   table: {
     width: "95%",
+    [theme.breakpoints.down('sm')]: {
+      width: "100%"
+    }
   },
   formControl: {
     minWidth: 100,
@@ -129,6 +144,11 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': {
       background: "#f9f9f9",
       cursor: "pointer"
+    }
+  }, 
+  hiddenMobile: {
+    [theme.breakpoints.down('sm')]: {
+      display: 'none'
     }
   }
 }));
@@ -404,9 +424,12 @@ const PageContent = () => {
       <CssBaseline />
       <AppBar position="fixed" className={classes.appbar}>
         <Toolbar className={classes.toolbar} >
-          <IconButton edge="start">
+          <IconButton className={classes.menuButton} edge="start">
             <MenuIcon onClick={() => setMobileDrawer(true)} />
           </IconButton>
+          <Typography variant="h6">
+            Actor Database
+          </Typography>
         </Toolbar>
       </AppBar>
       <Hidden mdUp implementation="css">
@@ -427,7 +450,7 @@ const PageContent = () => {
       <main className={classes.content}>
         <IconButton
           onClick={(e) => setAnchorEl(e.currentTarget)}
-          className={classes.dropdownButton}
+          className={`${classes.dropdownButton} ${classes.hiddenMobile}`}
         >
           <FaPlus />
         </IconButton>
@@ -453,12 +476,13 @@ const PageContent = () => {
           <Table>
             <TableHead>
               <TableRow>
-                {cols.map((col) => (
-                  <TableCell key={col}>
+                {cols.map((col, index) => (
+                  <TableCell key={col} className={index > 1 ? classes.hiddenMobile : ''}>
                     <div className="d-flex align-items-center justify-content-between">
                       {col !== "bestKnownFor" ? col[0].toUpperCase() + col.slice(1) : "Best Known For"}
                       <FaMinusCircle
                         style={{ cursor: "pointer", color: "red" }}
+                        className={classes.hiddenMobile}
                         onClick={() => {
                           setCols(cols.filter((c) => c !== col));
                         }}
@@ -476,22 +500,22 @@ const PageContent = () => {
                       onClick={() => handleModalOpen(model._id)}
                       className={classes.tr}
                     >
-                      {cols.map((col) => {
+                      {cols.map((col, index) => {
                         if (col === "age") {
                           return (
-                            <TableCell>
+                            <TableCell className={index > 1 ? classes.hiddenMobile : ''}>
                               {model.ageMin}-{model.ageMax}
                             </TableCell>
                           );
                         } else if (col === "height") {
                           return (
-                            <TableCell>
+                            <TableCell className={index > 1 ? classes.hiddenMobile : ''}>
                               {model.heightFt}'{model.heightIn}"
                             </TableCell>
                           );
                         } else {
                           return (
-                            <TableCell key={model._id + col}>
+                            <TableCell key={model._id + col} className={index > 1 ? classes.hiddenMobile : ''}>
                               {model[col]}
                             </TableCell>
                           );
@@ -523,7 +547,7 @@ const PageContent = () => {
                   <Grid item xs={4}>
                     <TextField
                       value={model.bestKnownFor}
-                      label="Best Known For"
+                      label="Known For"
                       name="bestKnownFor"
                       type="text"
                       onChange={handleChange}
@@ -555,7 +579,7 @@ const PageContent = () => {
                 <Grid className={classes.formGrid} container spacing={3}>
                   <Grid item xs={4}>
                     <TextField
-                      label="Daytime Availability?"
+                      label="Daytime?"
                       value={model.daytime}
                       name="daytime"
                       type="text"
@@ -591,7 +615,7 @@ const PageContent = () => {
                       <FormLabel component="legend">Height</FormLabel>
                       <Grid>
                         <TextField
-                          label="Feet"
+                          label="Ft"
                           style={{ width: "35%" }}
                           className="mx-1"
                           value={model.heightFt}
@@ -600,7 +624,7 @@ const PageContent = () => {
                           onChange={handleChange}
                         />
                         <TextField
-                          label="Inches"
+                          label="In"
                           style={{ width: "35%" }}
                           className="mx-1"
                           value={model.heightIn}
@@ -722,12 +746,12 @@ const PageContent = () => {
         >
         <DialogContent>
               <Grid container spacing={3}>
-                <Grid item xs spacing={3}>
+                <Grid item xs={12} sm={6}spacing={3}>
                   {currentModel.imageUrl.length ?
                   <img src={currentModel.imageUrl} className={classes.image} /> : 
                   ''}
                 </Grid>
-                <Grid item xs spacing={3}>
+                <Grid item xs={12} sm={6} spacing={3}>
                   <Typography variant="h4" className={classes.typography}>
                     {currentModel.name}
                   </Typography>
