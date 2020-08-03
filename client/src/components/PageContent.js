@@ -31,15 +31,25 @@ import {
   Select,
   Checkbox,
   CircularProgress,
+  Hidden,
+  AppBar,
+  Toolbar,
+  Dialog,
+  DialogContent
 } from "@material-ui/core";
+import { Menu as MenuIcon } from "@material-ui/icons"
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
+    flexGrow: 1
   },
   title: {
     textAlign: "center",
     margin: "10px auto",
+  },
+  toolbar: theme.mixins.toolbar, 
+  appbar: {
   },
   drawer: {
     width: 250,
@@ -56,21 +66,21 @@ const useStyles = makeStyles((theme) => ({
     width: "85%"
   },
   content: {
+    marginTop: 65,
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
   },
   dropdownButton: {
     position: "fixed",
-    top: 0,
+    top: 65,
     right: 0,
   },
   dropdown: {
     position: "fixed",
-    top: 0,
+    top: 65,
     right: 0,
   },
   modal: {
-    width: "50%",
     maxHeight: "80%",
     position: "absolute",
     top: 0,
@@ -78,7 +88,16 @@ const useStyles = makeStyles((theme) => ({
     left: 0,
     right: 0,
     margin: "auto",
-    outline: "none",
+    outline: "none", 
+    [theme.breakpoints.up('sm')]: {
+      width: "90%"
+    }, 
+    [theme.breakpoints.up('md')]: {
+      width: "70%"
+    }, 
+    [theme.breakpoints.up('lg')]: {
+      width: "50%"
+    }
   },
   paper: {
     padding: theme.spacing(3),
@@ -170,6 +189,7 @@ const PageContent = () => {
     imageUrl: ""
   });
   const [currentModal, setCurrentModal] = useState(false);
+  const [mobileDrawer, setMobileDrawer] = useState(false);
   const [search, setSearch] = useState("");
   const [ageRange, setAgeRange] = useState([10, 60]);
   const [heightRange, setHeightRange] = useState([54, 78]);
@@ -306,18 +326,8 @@ const PageContent = () => {
     }
   };
 
-  return (
-    <div className={classes.root}>
-      <CssBaseline />
-      <Drawer
-        className={classes.drawer}
-        classes={{ paper: classes.drawerPaper }}
-        variant="permanent"
-        anchor="left"
-      >
-        <Typography className={classes.title} variant="h5">
-          Actor Database
-        </Typography>
+  const drawer = (
+    <>
         <Button
           className={classes.drawerListItem}
           variant="outlined"
@@ -386,7 +396,34 @@ const PageContent = () => {
             ))}
           </div>
         </form>
+        </>
+  )
+
+  return (
+    <div className={classes.root}>
+      <CssBaseline />
+      <AppBar position="fixed" className={classes.appbar}>
+        <Toolbar className={classes.toolbar} >
+          <IconButton edge="start">
+            <MenuIcon onClick={() => setMobileDrawer(true)} />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+      <Hidden mdUp implementation="css">
+      <Drawer className={classes.drawer} classes={{paper: classes.drawerPaper}} variant="temporary" open={mobileDrawer} onClose={() => setMobileDrawer(false)} anchor="left">
+        {drawer}
       </Drawer>
+      </Hidden>
+      <Hidden smDown implementation="css">
+      <Drawer
+        className={classes.drawer}
+        classes={{ paper: classes.drawerPaper }}
+        variant="permanent"
+        anchor="left"
+      >
+        {drawer}
+      </Drawer>
+      </Hidden>
       <main className={classes.content}>
         <IconButton
           onClick={(e) => setAnchorEl(e.currentTarget)}
@@ -466,9 +503,9 @@ const PageContent = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        <Modal open={modal} onClose={() => setModal(false)}>
-          <div className={classes.modal}>
-            <Paper className={classes.paper}>
+      </main>
+      <Dialog open={modal} onClose={() => setModal(false)}>
+      <DialogContent>
               <Typography variant="h6">Add Actor</Typography>
               <form onSubmit={handleModelAdd}>
                 <Grid className={classes.formGrid} container spacing={3}>
@@ -677,23 +714,20 @@ const PageContent = () => {
                   {formLoading ? <CircularProgress size={20} /> : 'Add Actor'}
                 </Button>
               </form>
-            </Paper>
-          </div>
-        </Modal>
-        <Modal
-          disableAutoFocus={true}
+              </DialogContent>
+        </Dialog>
+        <Dialog
           open={currentModal}
           onClose={() => setCurrentModal(false)}
         >
-          <div className={classes.modal}>
-            <Paper className={classes.paper}>
-              <Grid container>
-                <Grid item xs>
+        <DialogContent>
+              <Grid container spacing={3}>
+                <Grid item xs spacing={3}>
                   {currentModel.imageUrl.length ?
                   <img src={currentModel.imageUrl} className={classes.image} /> : 
                   ''}
                 </Grid>
-                <Grid item xs>
+                <Grid item xs spacing={3}>
                   <Typography variant="h4" className={classes.typography}>
                     {currentModel.name}
                   </Typography>
@@ -743,10 +777,8 @@ const PageContent = () => {
                   </Typography> : ''}
                 </Grid>
               </Grid>
-            </Paper>
-          </div>
-        </Modal>
-      </main>
+            </DialogContent>
+            </Dialog>
     </div>
   );
 };
